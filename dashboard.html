@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — MindMitra</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .trend-tooltip {
+      position: absolute;
+      background: var(--ink);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      pointer-events: none;
+      display: none;
+      z-index: 10;
+      white-space: nowrap;
+      box-shadow: var(--shadow-md);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar Shell Placeholder -->
+    <div id="app-sidebar-placeholder"></div>
+
+    <div style="flex: 1; display: flex; flex-direction: column;">
+      <!-- Mobile Topbar Placeholder -->
+      <div id="mobile-header-placeholder"></div>
+
+      <!-- Main Dashboard Page Content -->
+      <main class="app-main">
+        <!-- Dashboard Header -->
+        <header style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 28px;">
+          <div>
+            <p id="dash-date" class="text-sm text-muted font-bold"></p>
+            <h1 class="title-lg" id="dash-greeting">Good to see you.</h1>
+            <p class="text-sm text-muted" style="margin-top: 4px;">
+              Notice patterns gently. Your signal is for support, not diagnosis.
+            </p>
+          </div>
+          <a href="check-in.html" class="btn btn-primary">
+            Daily check-in
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </header>
+
+        <!-- Hero Status Cards -->
+        <div class="grid-dashboard-hero">
+          <!-- Main Signal Card (Dark) -->
+          <div class="card card-dark">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <p class="text-sm" style="color: #d7eee2; font-weight: 600;">Latest Wellbeing Support Signal</p>
+              <span id="signal-category-pill" class="badge" style="background: rgba(255,255,255,0.15); color: #fff;">Baseline</span>
+            </div>
+
+            <div style="margin-top: 14px; display: flex; align-items: baseline; gap: 8px;">
+              <span id="dash-latest-score" class="title-xl" style="color: #ffffff; line-height: 1;">--</span>
+              <span style="font-size: 1.25rem; color: #b9d1c4; font-weight: 700;">/100</span>
+            </div>
+
+            <div style="margin-top: 24px; height: 10px; background: rgba(255, 255, 255, 0.2); border-radius: var(--radius-full); overflow: hidden;">
+              <div id="dash-signal-bar" style="height: 100%; background: var(--sage); border-radius: var(--radius-full); width: 0%; transition: width 0.8s ease;"></div>
+            </div>
+
+            <p id="dash-signal-date" class="text-sm" style="color: #d7eee2; margin-top: 16px; line-height: 1.5;">
+              Loading your private support signal...
+            </p>
+          </div>
+
+          <!-- Recent Pattern Card -->
+          <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <div style="width: 44px; height: 44px; background: var(--mint); border-radius: var(--radius-md); display: grid; place-items: center; color: var(--ink);">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/><line x1="6" x2="6" y1="11" y2="13"/><line x1="10" x2="10" y1="11" y2="13"/></svg>
+                </div>
+                <div>
+                  <p class="text-xs text-muted" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Recent pattern</p>
+                  <p id="dash-pattern-title" class="font-bold" style="font-size: 1.05rem;">Calculating baseline</p>
+                </div>
+              </div>
+
+              <p id="dash-pattern-desc" class="text-sm text-muted" style="line-height: 1.6;">
+                Consistency can help you notice subtle fatigue before it compounds into burnout.
+              </p>
+            </div>
+
+            <div style="margin-top: 16px; padding: 10px 14px; background: var(--cream); border-radius: var(--radius-md); font-size: 0.825rem; font-weight: 600; color: var(--ink);" id="dash-weekly-count">
+              -- check-ins this week
+            </div>
+          </div>
+        </div>
+
+        <!-- Weekly Wellbeing Trend Card with Interactive SVG Graph -->
+        <div class="card" style="margin-top: 24px; background: #f4faf5; border-color: #d9e7df;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <p class="text-xs text-muted" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.12em;">Weekly wellbeing trend</p>
+              <h2 class="title-sm" style="margin-top: 4px; font-size: 1.35rem;">Support signal overview</h2>
+            </div>
+
+            <div id="analytics-status-badge" class="badge badge-mint" style="box-shadow: var(--shadow-soft); padding: 6px 14px; font-size: 0.8rem;">
+              Steady progress
+            </div>
+          </div>
+
+          <div class="grid-dashboard-trend" style="margin-top: 20px;">
+            <!-- SVG Interactive Chart Container -->
+            <div style="background: #ffffff; border: 1px solid rgba(16, 35, 29, 0.06); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-soft); position: relative;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div>
+                  <p class="text-xs text-muted" style="text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">7-day view</p>
+                  <p id="analytics-explanation" class="text-xs text-muted" style="margin-top: 2px;">Self-reported check-in history</p>
+                </div>
+                <div style="text-align: right;">
+                  <p class="text-xs text-muted" style="text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">7-Day Avg</p>
+                  <p id="analytics-avg" class="font-black" style="font-size: 1.4rem;">--</p>
+                </div>
+              </div>
+
+              <!-- Tooltip element -->
+              <div id="chart-tooltip" class="trend-tooltip"></div>
+
+              <!-- SVG Area & Line Chart -->
+              <div class="chart-container">
+                <svg id="trend-svg" class="chart-svg" viewBox="0 0 520 180" aria-label="Weekly Wellbeing Trend Graph">
+                  <defs>
+                    <linearGradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stopColor="#6FB38B" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#6FB38B" stopOpacity="0.04" />
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Grid lines -->
+                  <line x1="0" x2="520" y1="26" y2="26" stroke="#dfe9e6" stroke-dasharray="4 8" />
+                  <line x1="0" x2="520" y1="68" y2="68" stroke="#dfe9e6" stroke-dasharray="4 8" />
+                  <line x1="0" x2="520" y1="110" y2="110" stroke="#dfe9e6" stroke-dasharray="4 8" />
+                  <line x1="0" x2="520" y1="152" y2="152" stroke="#dfe9e6" stroke-dasharray="4 8" />
+
+                  <!-- Paths and Circles populated by JS -->
+                  <path id="trend-area-path" class="chart-area" d="" />
+                  <path id="trend-line-path" class="chart-line" d="" />
+                  <g id="trend-points-group"></g>
+                </svg>
+              </div>
+
+              <!-- 7-Day Day Label Grid -->
+              <div id="chart-day-labels" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; margin-top: 12px; font-size: 0.75rem;">
+                <!-- Filled dynamically -->
+              </div>
+            </div>
+
+            <!-- Stats Column -->
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="card" style="padding: 16px;">
+                <p class="text-xs text-muted" style="text-transform: uppercase; font-weight: 700;">Current</p>
+                <p id="analytics-current-score" class="title-md" style="margin-top: 4px;">--</p>
+                <p id="analytics-focus" class="text-xs text-muted" style="margin-top: 4px;">Calculating trend...</p>
+              </div>
+
+              <div class="card" style="padding: 16px;">
+                <p class="text-xs text-muted" style="text-transform: uppercase; font-weight: 700;">Change</p>
+                <p id="analytics-delta" class="title-md" style="margin-top: 4px;">--</p>
+                <p class="text-xs text-muted" style="margin-top: 4px;">Compared with start of the week</p>
+              </div>
+
+              <div class="card" style="padding: 16px;">
+                <p class="text-xs text-muted" style="text-transform: uppercase; font-weight: 700;">Consistency</p>
+                <div style="margin-top: 8px; height: 8px; background: #dfe9e6; border-radius: var(--radius-full); overflow: hidden;">
+                  <div id="analytics-consistency-bar" style="height: 100%; background: var(--sage); border-radius: var(--radius-full); width: 0%;"></div>
+                </div>
+                <p id="analytics-consistency-text" class="font-bold" style="font-size: 1.1rem; margin-top: 6px;">--%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Quick Action Cards -->
+        <div class="grid-3" style="margin-top: 24px;">
+          <a href="cbt.html" class="card quick-action-card card-interactive">
+            <div>
+              <div class="action-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+              </div>
+              <h3 class="title-sm">2-minute reset</h3>
+              <p class="text-sm text-muted" style="margin-top: 4px;">Breathe, ground, and quick journal.</p>
+            </div>
+            <div style="margin-top: 16px; font-size: 0.825rem; font-weight: 700; color: var(--sage-dark);">Start reset &rarr;</div>
+          </a>
+
+          <a href="chat.html" class="card quick-action-card card-interactive">
+            <div>
+              <div class="action-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+              </div>
+              <h3 class="title-sm">Talk to AI Assistant</h3>
+              <p class="text-sm text-muted" style="margin-top: 4px;">Empathetic, confidential AI conversational support anytime.</p>
+            </div>
+            <div style="margin-top: 16px; font-size: 0.825rem; font-weight: 700; color: var(--sage-dark);">Start conversation &rarr;</div>
+          </a>
+
+          <a href="crisis.html" class="card quick-action-card card-interactive" style="border-color: rgba(255, 128, 102, 0.4);">
+            <div>
+              <div class="action-icon" style="background: var(--coral-light); color: var(--coral-dark);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+              </div>
+              <h3 class="title-sm">Need urgent help?</h3>
+              <p class="text-sm text-muted" style="margin-top: 4px;">Immediate campus & Tele-MANAS contacts.</p>
+            </div>
+            <div style="margin-top: 16px; font-size: 0.825rem; font-weight: 700; color: var(--coral-dark);">Emergency support &rarr;</div>
+          </a>
+        </div>
+
+        <!-- Recent Check-Ins History List -->
+        <div class="card" style="margin-top: 24px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              <h3 class="title-sm">Recent check-ins</h3>
+            </div>
+            <a href="check-in.html" class="btn btn-ghost btn-sm">New entry</a>
+          </div>
+
+          <div id="recent-checkins-list" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/wellbeing.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    (function () {
+      const user = window.MindMitraStorage.getUser() || { name: 'there' };
+      const checkIns = window.MindMitraStorage.getCheckIns();
+
+      // Greeting & Date
+      const dateEl = document.getElementById('dash-date');
+      const greetingEl = document.getElementById('dash-greeting');
+      const now = new Date();
+      dateEl.textContent = now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      greetingEl.textContent = `Good to see you, ${user.name || 'there'}.`;
+
+      // Latest Check-In Score
+      const latest = checkIns[0];
+      const latestScoreEl = document.getElementById('dash-latest-score');
+      const signalBarEl = document.getElementById('dash-signal-bar');
+      const signalDateEl = document.getElementById('dash-signal-date');
+      const categoryPill = document.getElementById('signal-category-pill');
+
+      if (latest) {
+        latestScoreEl.textContent = latest.support_signal;
+        signalBarEl.style.width = `${latest.support_signal}%`;
+        const recDate = new Date(latest.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+        signalDateEl.textContent = `Recorded on ${recDate}. Reflects self-reported inputs — not a medical diagnosis.`;
+
+        const cat = window.MindMitraWellbeing.getSignalCategory(latest.support_signal);
+        categoryPill.textContent = cat.label;
+        categoryPill.style.background = cat.color;
+        categoryPill.style.color = '#fff';
+      } else {
+        latestScoreEl.textContent = 'None';
+        signalDateEl.textContent = 'No check-ins yet. Take your 5-second check-in to generate your baseline.';
+      }
+
+      // Pattern & This Week stats
+      const weekStart = new Date();
+      weekStart.setHours(0, 0, 0, 0);
+      weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
+      const thisWeekCount = checkIns.filter((c) => new Date(c.created_at) >= weekStart).length;
+      document.getElementById('dash-weekly-count').textContent = `${thisWeekCount} check-in${thisWeekCount === 1 ? '' : 's'} this week`;
+
+      const patternTitle = document.getElementById('dash-pattern-title');
+      const patternDesc = document.getElementById('dash-pattern-desc');
+      if (checkIns.length < 2) {
+        patternTitle.textContent = 'Building your baseline';
+        patternDesc.textContent = 'Record daily for a few days to unlock intelligent shifts and trends.';
+      } else {
+        const trendDelta = checkIns[0].support_signal - checkIns[1].support_signal;
+        if (trendDelta > 3) {
+          patternTitle.textContent = 'Signal is higher (Heavier load)';
+          patternDesc.textContent = 'Stress or fatigue has ticked upward recently. Give yourself a breathing pause.';
+        } else if (trendDelta < -3) {
+          patternTitle.textContent = 'Signal is lower (Lighter load)';
+          patternDesc.textContent = 'Your wellbeing indicators reflect better sleep or lighter pressure. Great job!';
+        } else {
+          patternTitle.textContent = 'Signal is steady';
+          patternDesc.textContent = 'Your wellbeing metrics have remained consistent over consecutive check-ins.';
+        }
+      }
+
+      // Wellbeing 7-Day Trend Chart & Stats
+      const analytics = window.MindMitraWellbeing.getWellbeingAnalytics(checkIns);
+
+      document.getElementById('analytics-avg').textContent = analytics.average;
+      document.getElementById('analytics-current-score').textContent = analytics.current;
+      document.getElementById('analytics-focus').textContent = analytics.focus;
+      document.getElementById('analytics-explanation').textContent = analytics.explanation;
+
+      const deltaEl = document.getElementById('analytics-delta');
+      deltaEl.textContent = (analytics.delta >= 0 ? '+' : '') + analytics.delta;
+      deltaEl.style.color = analytics.delta <= 0 ? 'var(--sage-dark)' : 'var(--coral-dark)';
+
+      document.getElementById('analytics-consistency-bar').style.width = `${analytics.consistency}%`;
+      document.getElementById('analytics-consistency-text').textContent = `${analytics.consistency}%`;
+
+      const statusBadge = document.getElementById('analytics-status-badge');
+      statusBadge.textContent = analytics.status;
+      if (analytics.delta <= 0) {
+        statusBadge.className = 'badge badge-sage';
+      } else {
+        statusBadge.className = 'badge badge-coral';
+      }
+
+      // Draw SVG paths
+      const linePath = window.MindMitraWellbeing.buildTrendPath(analytics.points, 520, 180);
+      const areaPath = window.MindMitraWellbeing.buildAreaPath(analytics.points, 520, 180);
+      document.getElementById('trend-line-path').setAttribute('d', linePath);
+      document.getElementById('trend-area-path').setAttribute('d', areaPath);
+
+      // Render Interactive Points & Tooltips
+      const pointsGroup = document.getElementById('trend-points-group');
+      const dayLabelsContainer = document.getElementById('chart-day-labels');
+      const tooltip = document.getElementById('chart-tooltip');
+      const svg = document.getElementById('trend-svg');
+
+      pointsGroup.innerHTML = '';
+      dayLabelsContainer.innerHTML = '';
+
+      analytics.points.forEach((point, index) => {
+        const stepX = (520 - 40) / Math.max(1, analytics.points.length - 1);
+        const x = 20 + index * stepX;
+        const y = 180 - 20 - ((point.score - 30) / 70) * (180 - 50);
+
+        // SVG circle element
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', x.toFixed(1));
+        circle.setAttribute('cy', y.toFixed(1));
+        circle.setAttribute('r', '5');
+        circle.setAttribute('class', 'chart-point');
+
+        // Circle hover listeners
+        circle.addEventListener('mouseenter', (e) => {
+          tooltip.style.display = 'block';
+          tooltip.innerHTML = `<strong>${point.label} (${point.date})</strong><br>Score: ${point.score}/100<br>Mood: ${['Rough','Low','Okay','Good','Great'][point.mood] || 'Okay'}`;
+          const svgRect = svg.getBoundingClientRect();
+          tooltip.style.left = `${e.clientX - svgRect.left + 10}px`;
+          tooltip.style.top = `${e.clientY - svgRect.top - 40}px`;
+        });
+        circle.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+        });
+
+        pointsGroup.appendChild(circle);
+
+        // Day column in footer
+        const dayCol = document.createElement('div');
+        dayCol.innerHTML = `
+          <div style="color: var(--text-muted);">${point.label}</div>
+          <div style="font-weight: 800; color: var(--ink); margin-top: 2px;">${point.score}</div>
+        `;
+        dayLabelsContainer.appendChild(dayCol);
+      });
+
+      // Render Recent Check-ins List
+      const listContainer = document.getElementById('recent-checkins-list');
+      if (checkIns.length === 0) {
+        listContainer.innerHTML = `<p class="text-sm text-muted">No check-ins recorded yet.</p>`;
+      } else {
+        const moodEmoji = ['😞', '😕', '😐', '🙂', '😄'];
+        const sleepLabels = ['', 'Poor sleep', 'Okay sleep', 'Restful sleep'];
+        const loadLabels = ['', 'Light load', 'Manageable load', 'Heavy load'];
+
+        listContainer.innerHTML = checkIns.slice(0, 6).map((item) => {
+          const d = new Date(item.created_at);
+          const dateStr = d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+          const timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+          return `
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--cream); border-radius: var(--radius-md); font-size: 0.875rem;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.3rem;">${moodEmoji[item.mood] || '😐'}</span>
+                <div>
+                  <div style="font-weight: 700; color: var(--ink);">${dateStr} · <span style="font-weight: 400; color: var(--text-muted); font-size: 0.775rem;">${timeStr}</span></div>
+                  <div class="text-xs text-muted">${sleepLabels[item.sleep_quality] || 'Normal sleep'} · ${loadLabels[item.academic_load] || 'Manageable'}</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <span class="badge ${item.support_signal < 60 ? 'badge-sage' : item.support_signal <= 75 ? 'badge-mint' : 'badge-coral'}">
+                  ${item.support_signal}/100 signal
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    })();
+  </script>
+</body>
+</html>

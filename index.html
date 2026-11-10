@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMitra — Student Wellbeing</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .landing-header {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .landing-hero {
+      max-width: 1140px;
+      margin: 20px auto 60px;
+      padding: 0 20px;
+    }
+    .feature-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(16, 35, 29, 0.08);
+    }
+    .feature-row:last-child {
+      border-bottom: none;
+    }
+    .feature-icon-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(16, 35, 29, 0.2);
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .interactive-preview-card {
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+      margin-top: 36px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Landing Header -->
+  <header class="landing-header">
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 1.45rem; font-weight: 900; color: var(--ink);">
+      <span class="brand-icon" style="width: 38px; height: 38px; border-radius: 12px; background: var(--ink); color: #fff; display: grid; place-items: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08v0c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66"/><path d="m18 15-2-2"/><path d="m15 18-2-2"/></svg>
+      </span>
+      <span>MindMitra</span>
+    </div>
+
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <a href="auth.html" class="btn btn-outline btn-sm">Login / Register</a>
+      <a href="auth.html" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="landing-hero">
+    <div class="badge badge-mint" style="padding: 6px 14px; font-size: 0.825rem; margin-bottom: 24px;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+      Private by design · No MERN stack required
+    </div>
+
+    <h1 class="title-xl" style="max-width: 820px; line-height: 1.1;">
+      Notice wellbeing shifts early.
+    </h1>
+
+    <p class="lead-text" style="max-width: 780px; margin-top: 20px;">
+      A student wellbeing space for tiny daily check-ins, two-minute resets, and human peer support — before stress becomes a crisis.
+    </p>
+
+    <div style="margin-top: 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+      <a href="auth.html" class="btn btn-primary btn-lg">
+        Start privately
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+      <a href="#how" class="btn btn-ghost" style="text-decoration: underline; text-underline-offset: 4px;">
+        How it works
+      </a>
+    </div>
+
+    <!-- Live Interactive Preview Widget -->
+    <div class="interactive-preview-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <div>
+          <span class="badge badge-gray" style="margin-bottom: 6px;">Live Interactive Preview</span>
+          <h2 class="title-sm">Try the 5-second wellbeing support calculation</h2>
+        </div>
+        <div id="preview-signal-badge" class="badge badge-sage" style="font-size: 0.9rem; padding: 6px 12px;">
+          Support Signal: 63/100
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+        <div>
+          <label class="form-label" style="font-size: 0.8rem;">Mood</label>
+          <div class="mood-grid" style="margin: 6px 0;">
+            <button type="button" class="mood-btn" data-mood="0" title="Rough">😞</button>
+            <button type="button" class="mood-btn" data-mood="1" title="Low">😕</button>
+            <button type="button" class="mood-btn selected" data-mood="2" title="Okay">😐</button>
+            <button type="button" class="mood-btn" data-mood="3" title="Good">🙂</button>
+            <button type="button" class="mood-btn" data-mood="4" title="Great">😄</button>
+          </div>
+          <div id="preview-mood-label" class="text-xs text-muted text-center">Okay</div>
+        </div>
+
+        <div>
+          <label class="form-label" style="font-size: 0.8rem;">Sleep Quality</label>
+          <input type="range" class="form-range" id="preview-sleep" min="1" max="3" value="2">
+          <div class="range-labels">
+            <span>Poor</span>
+            <span>Okay</span>
+            <span>Restful</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label" style="font-size: 0.8rem;">Academic Load</label>
+          <input type="range" class="form-range" id="preview-load" min="1" max="3" value="2">
+          <div class="range-labels">
+            <span>Light</span>
+            <span>Manageable</span>
+            <span>Heavy</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; padding: 14px 18px; background: var(--cream); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+        <p class="text-xs text-muted" style="margin: 0;">
+          <strong>Signal formula:</strong> <code>65 - (mood × 10) + (3 - sleep) × 12 + (load × 10)</code>. Clamped between 5 and 95.
+        </p>
+        <a href="check-in.html" class="btn btn-sm btn-primary">Take full daily check-in &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Feature Rows Section -->
+    <section id="how" style="margin-top: 60px;">
+      <h2 class="title-md" style="margin-bottom: 24px;">Designed for quiet, human support</h2>
+
+      <div class="feature-row">
+        <div style="display: flex; gap: 14px;">
+          <span class="feature-icon-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 800;">Today</h3>
+            <p class="text-sm text-muted" style="margin-top: 4px;">Support signal overview and 7-day pattern trends.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge badge-mint">2 min</span>
+          <span class="text-sm text-muted">Private</span>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div style="display: flex; gap: 14px;">
+          <span class="feature-icon-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 800;">Private check-ins</h3>
+            <p class="text-sm text-muted" style="margin-top: 4px;">A support signal. Not a medical diagnosis.</p>
+          </div>
+        </div>
+        <div>
+          <span class="text-sm text-muted">Confidential</span>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div style="display: flex; gap: 14px;">
+          <span class="feature-icon-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          </span>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 800;">Mitra AI Assistant</h3>
+            <p class="text-sm text-muted" style="margin-top: 4px;">Empathetic conversational AI companion trained for student wellbeing, exams, and burnout.</p>
+          </div>
+        </div>
+        <div>
+          <span class="text-sm text-muted">24/7 Available</span>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div style="display: flex; gap: 14px;">
+          <span class="feature-icon-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </span>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 800;">5-second check-in</h3>
+            <p class="text-sm text-muted" style="margin-top: 4px;">Capture mood, sleep and academic workload without long forms.</p>
+          </div>
+        </div>
+        <div>
+          <span class="text-sm text-muted">Quick</span>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div style="display: flex; gap: 14px;">
+          <span class="feature-icon-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          </span>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 800;">2-minute reset</h3>
+            <p class="text-sm text-muted" style="margin-top: 4px;">Use box breathing, 5-4-3-2-1 grounding and reflection exercises when pressure spikes.</p>
+          </div>
+        </div>
+        <div>
+          <span class="text-sm text-muted">Gentle</span>
+        </div>
+      </div>
+
+      <div class="feature-row">
+        <div style="display: flex; gap: 14px;">
+          <span class="feature-icon-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+          </span>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 800;">Escalation when needed</h3>
+            <p class="text-sm text-muted" style="margin-top: 4px;">Make urgent campus and emergency support (112 & Tele-MANAS) easy to reach.</p>
+          </div>
+        </div>
+        <div>
+          <span class="text-sm text-muted">Safe</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Safeguard Footer -->
+    <footer style="margin-top: 60px; padding: 24px; border-top: 1px solid rgba(16, 35, 29, 0.08); text-align: center;">
+      <p class="text-xs text-muted" style="max-width: 600px; margin: 0 auto; line-height: 1.6;">
+        <strong>Important product safeguards:</strong> MindMitra does not diagnose students. It detects self-reported wellbeing shifts and provides early support. MindMitra is built using clean HTML5, CSS3, and JavaScript with local persistence.
+      </p>
+    </footer>
+  </main>
+
+  <!-- Script for Landing Interactive Preview -->
+  <script src="js/storage.js"></script>
+  <script src="js/wellbeing.js"></script>
+  <script>
+    (function () {
+      let currentMood = 2;
+      const moodLabels = ["Rough", "Low", "Okay", "Good", "Great"];
+      const sleepSlider = document.getElementById('preview-sleep');
+      const loadSlider = document.getElementById('preview-load');
+      const moodLabel = document.getElementById('preview-mood-label');
+      const signalBadge = document.getElementById('preview-signal-badge');
+      const moodButtons = document.querySelectorAll('.mood-btn');
+
+      function updatePreview() {
+        const sleep = parseInt(sleepSlider.value, 10);
+        const load = parseInt(loadSlider.value, 10);
+        const score = window.MindMitraWellbeing.calculateSupportSignal(currentMood, sleep, load);
+        signalBadge.textContent = `Support Signal: ${score}/100`;
+
+        if (score < 55) {
+          signalBadge.className = 'badge badge-sage';
+        } else if (score <= 75) {
+          signalBadge.className = 'badge badge-mint';
+        } else {
+          signalBadge.className = 'badge badge-coral';
+        }
+      }
+
+      moodButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          moodButtons.forEach((b) => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          currentMood = parseInt(btn.dataset.mood, 10);
+          moodLabel.textContent = moodLabels[currentMood];
+          updatePreview();
+        });
+      });
+
+      sleepSlider.addEventListener('input', updatePreview);
+      loadSlider.addEventListener('input', updatePreview);
+
+      updatePreview();
+    })();
+  </script>
+</body>
+</html>
