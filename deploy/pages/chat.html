@@ -389,7 +389,7 @@
             window.MindMitraApp.toast(aiResponse.fallbackNote, 'info');
           }
         } catch (err) {
-          console.error('[MindMitra AI Error]', err);
+          console.warn('[MindMitra AI] Chat response failed; showing the offline-safe fallback message.', err);
           window.MindMitraStorage.addMessage(
             AI_ROOM_ID,
             'mitra_ai',

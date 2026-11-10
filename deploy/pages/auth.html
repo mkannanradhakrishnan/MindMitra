@@ -339,7 +339,7 @@
         try {
           supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key);
         } catch (err) {
-          console.warn('[MindMitra] Supabase init fallback:', err);
+          console.info('[MindMitra] Supabase client unavailable; continuing in local-only auth mode.', err);
         }
       }
 
@@ -443,7 +443,7 @@
                 submitRegisterBtn.textContent = 'Create Account & Get Started';
                 return;
               }
-              console.warn('[MindMitra] Supabase sign up notice:', error.message);
+              console.info('[MindMitra] Supabase sign-up returned a non-fatal notice; continuing with local registration fallback.', error.message);
             } else if (data && data.user) {
               const userObj = {
                 id: data.user.id,

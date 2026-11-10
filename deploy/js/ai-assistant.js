@@ -283,7 +283,7 @@ Guiding principles:
         try {
           return await geminiAI.generateResponse(userInput, history);
         } catch (err) {
-          console.warn('[MindMitra AI] Gemini API call failed, gracefully falling back to Local Cognitive AI:', err);
+          console.warn('[MindMitra AI] Gemini request failed; using Local Cognitive AI fallback.', err);
           // Graceful fallback to Local Cognitive AI
           const localResult = localAI.generateResponse(userInput, history);
           localResult.fallbackNote = `Note: Gemini API temporarily unavailable (${err.message}). Using local companion.`;
