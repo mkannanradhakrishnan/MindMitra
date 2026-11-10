@@ -245,6 +245,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/storage.js"></script>
   <script src="../js/app.js"></script>
   <script>
@@ -328,7 +329,21 @@
         });
       });
 
-      formLogin.addEventListener('submit', (e) => {
+      // Supabase Authentication Configuration
+      const SUPABASE_CONFIG = {
+        url: 'https://khtxtnnyzvxvcjhydgta.supabase.co',
+        key: 'sb_publishable_6bnKhtgfsREi9gVSejYtGw_E9A8aLZI'
+      };
+      let supabaseClient = null;
+      if (window.supabase && SUPABASE_CONFIG.url && SUPABASE_CONFIG.key) {
+        try {
+          supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key);
+        } catch (err) {
+          console.warn('[MindMitra] Supabase init fallback:', err);
+        }
+      }
+
+      formLogin.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearFeedback();
 
@@ -338,23 +353,57 @@
         submitLoginBtn.disabled = true;
         submitLoginBtn.textContent = 'Verifying credentials...';
 
+        // 1. Try Supabase Authentication if available
+        if (supabaseClient) {
+          try {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (!error && data && data.user) {
+              const meta = data.user.user_metadata || {};
+              const userObj = {
+                id: data.user.id,
+                name: meta.name || email.split('@')[0],
+                email: data.user.email,
+                role: meta.role || 'student',
+                alias: `Student #${data.user.id.replaceAll('-', '').slice(0, 4).toUpperCase()}`,
+                provider: 'supabase'
+              };
+              window.MindMitraStorage.setUser(userObj);
+              showFeedback(`Welcome back, ${userObj.name}! Redirecting to dashboard...`, 'success');
+              setTimeout(() => { window.location.assign('dashboard.html'); }, 700);
+              return;
+            } else if (error && error.message !== 'Failed to fetch' && !error.message.includes('fetch failed')) {
+              // Check if user exists in local storage
+              const localResult = window.MindMitraStorage.loginUser(email, password);
+              if (localResult.success) {
+                showFeedback(`Welcome back, ${localResult.user.name}! Redirecting to your dashboard...`, 'success');
+                setTimeout(() => { window.location.assign('dashboard.html'); }, 700);
+                return;
+              }
+              showFeedback(error.message, 'error');
+              submitLoginBtn.disabled = false;
+              submitLoginBtn.textContent = 'Log in to MindMitra';
+              return;
+            }
+          } catch (supaErr) {
+            console.info('[MindMitra] Falling back to local storage auth:', supaErr);
+          }
+        }
+
+        // 2. Local Storage Authentication fallback
         setTimeout(() => {
           const result = window.MindMitraStorage.loginUser(email, password);
-
           if (result.success) {
             showFeedback(`Welcome back, ${result.user.name}! Redirecting to your dashboard...`, 'success');
-            setTimeout(() => {
-              window.location.assign('dashboard.html');
-            }, 800);
+            setTimeout(() => { window.location.assign('dashboard.html'); }, 700);
           } else {
             showFeedback(result.error || 'Invalid email or password. Please verify your credentials.', 'error');
             submitLoginBtn.disabled = false;
             submitLoginBtn.textContent = 'Log in to MindMitra';
           }
-        }, 350);
+        }, 300);
       });
 
-      formRegister.addEventListener('submit', (e) => {
+      formRegister.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearFeedback();
 
@@ -376,6 +425,51 @@
         submitRegisterBtn.disabled = true;
         submitRegisterBtn.textContent = 'Creating account...';
 
+        // 1. Try Supabase Authentication if available
+        if (supabaseClient) {
+          try {
+            const { data, error } = await supabaseClient.auth.signUp({
+              email,
+              password,
+              options: {
+                data: { name, role: currentRole }
+              }
+            });
+
+            if (error) {
+              if (error.message.toLowerCase().includes('already registered')) {
+                showFeedback('An account with this email already exists in Supabase. Please switch to the Log In tab.', 'error');
+                submitRegisterBtn.disabled = false;
+                submitRegisterBtn.textContent = 'Create Account & Get Started';
+                return;
+              }
+              console.warn('[MindMitra] Supabase sign up notice:', error.message);
+            } else if (data && data.user) {
+              const userObj = {
+                id: data.user.id,
+                name,
+                email,
+                role: currentRole,
+                alias: `Student #${data.user.id.replaceAll('-', '').slice(0, 4).toUpperCase()}`,
+                provider: 'supabase'
+              };
+              window.MindMitraStorage.setUser(userObj);
+              window.MindMitraStorage.registerUser({ name, email, password, role: currentRole });
+
+              if (!data.session) {
+                showFeedback(`Account created in Supabase! If confirmation is required, check your email inbox. Welcome, ${name}! Opening dashboard...`, 'success');
+              } else {
+                showFeedback(`Account created successfully! Welcome, ${name}. Opening dashboard...`, 'success');
+              }
+              setTimeout(() => { window.location.assign('dashboard.html'); }, 900);
+              return;
+            }
+          } catch (supaErr) {
+            console.info('[MindMitra] Falling back to local storage registration:', supaErr);
+          }
+        }
+
+        // 2. Local Storage Registration fallback
         setTimeout(() => {
           const result = window.MindMitraStorage.registerUser({
             name,
@@ -386,19 +480,17 @@
 
           if (result.success) {
             showFeedback(`Account created successfully! Welcome, ${result.user.name}. Opening dashboard...`, 'success');
-            setTimeout(() => {
-              window.location.assign('dashboard.html');
-            }, 800);
+            setTimeout(() => { window.location.assign('dashboard.html'); }, 700);
           } else {
             showFeedback(result.error || 'Failed to create account.', 'error');
             submitRegisterBtn.disabled = false;
             submitRegisterBtn.textContent = 'Create Account & Get Started';
           }
-        }, 400);
+        }, 300);
       });
 
       forgotHintBtn.addEventListener('click', () => {
-        alert('MindMitra stores accounts locally on your browser. If you forgot your password, you can register a new account on this page or use the pre-configured sample account: student@college.edu / password123.');
+        alert('MindMitra connects to Supabase Cloud Authentication. If your project has email confirmation enabled, verify your inbox. You can also register a new account or sign in with your student credentials.');
       });
     })();
   </script>

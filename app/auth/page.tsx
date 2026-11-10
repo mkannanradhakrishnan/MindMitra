@@ -38,6 +38,8 @@ export default function Auth() {
       setMsg("Supabase could not verify this secure link. Request a new link and open the newest email once.");
     } else if (authError === "callback") {
       setMsg("That sign-in link is invalid or expired. Request a new secure link.");
+    } else if (authError === "missing_config") {
+      setMsg("Deployment setup required: Supabase environment variables are missing on the hosting platform. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY to your Vercel/Netlify dashboard.");
     }
   }, []);
   async function submit(e: React.FormEvent) {

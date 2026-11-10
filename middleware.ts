@@ -17,10 +17,9 @@ export async function middleware(request: NextRequest) {
   const missingVariables = getMissingSupabaseVariables();
   if (missingVariables.length > 0) {
     if (!isProtected) return NextResponse.next({ request });
-    return new NextResponse(
-      `MindMitra configuration error: missing ${missingVariables.join(", ")}. Create .env.local at the project root beside package.json using .env.example, then restart npm run dev.`,
-      { status: 500, headers: { "content-type": "text/plain; charset=utf-8" } },
-    );
+    const redirectUrl = new URL("/auth", request.url);
+    redirectUrl.searchParams.set("error", "missing_config");
+    return NextResponse.redirect(redirectUrl);
   }
 
   const { url, publishableKey } = getSupabaseConfig();

@@ -138,3 +138,45 @@ Mitra operates in **Dual-Engine Mode**:
 2. **Google Gemini API (Cloud AI)**:
    - To connect Gemini, open **Settings** (`pages/settings.html`), paste your Gemini API key, and click **Save Key**.
    - MindMitra calls Google's `gemini-1.5-flash` model directly from the client without exposing credentials or requiring a server.
+
+---
+
+## 🔑 Resolving Supabase Authentication Deployment Errors
+
+If you encountered errors with Supabase Authentication when deploying, here is why it occurs and how to resolve each:
+
+### 1. Missing Environment Variables on Vercel / Netlify
+- **Why it happens**: Your `.env.local` file is listed in `.gitignore` for security. When Vercel or Netlify deploys, it does not have your Supabase keys, causing `middleware.ts` or page loads to return a **500 Server Error** or fail with `missing NEXT_PUBLIC_SUPABASE_URL`.
+- **How to fix**:
+  1. Go to your **Vercel** or **Netlify** project dashboard.
+  2. Navigate to **Settings** → **Environment Variables**.
+  3. Add the following keys:
+     - `NEXT_PUBLIC_SUPABASE_URL`: `https://khtxtnnyzvxvcjhydgta.supabase.co`
+     - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: `sb_publishable_6bnKhtgfsREi9gVSejYtGw_E9A8aLZI`
+     - `NEXT_PUBLIC_CAMPUS_COUNSELLING_PHONE`: `9042700663`
+  4. Trigger a **Redeploy**.
+
+---
+
+### 2. "redirect_uri_not_allowed" or Magic Link Redirecting to `localhost:3000`
+- **Why it happens**: Supabase enforces strict URL whitelisting for auth redirects. In development, the default is `http://localhost:3000`. On a deployed domain (e.g. `https://your-app.vercel.app`), Supabase will reject the login or redirect to localhost.
+- **How to fix**:
+  1. Open your [Supabase Dashboard](https://supabase.com/dashboard/project/khtxtnnyzvxvcjhydgta).
+  2. Navigate to **Authentication** → **URL Configuration**.
+  3. Change **Site URL** to your deployed URL:
+     `https://<your-project-name>.vercel.app` (or custom domain).
+  4. In **Redirect URLs**, add:
+     - `https://<your-project-name>.vercel.app/**`
+     - `https://<your-project-name>.vercel.app/auth/callback`
+     - `http://localhost:3000/**` (keeps local testing working)
+  5. Click **Save**.
+
+---
+
+### 3. Vercel Auto-Building Next.js Instead of the Pure Static App
+- **Why it happens**: If you deploy the whole repository to Vercel, Vercel detects `package.json` and runs `next build`. If Supabase keys aren't configured, the build/middleware fails.
+- **How to fix**:
+  - **Option A (Zero-Build Netlify Drop)**: Simply drag and drop the `deploy/` folder to [app.netlify.com/drop](https://app.netlify.com/drop). No build step, no Node server, no Supabase errors.
+  - **Option B (Vercel Root Directory)**: In Vercel Project Settings → General, set **Root Directory** to `deploy`.
+  - **Option C (HTML/CSS/JS with Supabase)**: The `pages/auth.html` page now has built-in Supabase JS SDK integration with automatic local fallback. It authenticates directly against Supabase in the browser without needing a Node server!
+

@@ -40,9 +40,9 @@ export function getSupabaseConfig() {
     );
   }
 
-  if (!publishableKey.startsWith("sb_publishable_")) {
+  if (!publishableKey.startsWith("sb_publishable_") && !publishableKey.startsWith("eyJ")) {
     throw new Error(
-      "MindMitra Supabase configuration is invalid: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY must be a Supabase publishable key. Check the root .env.local file and restart npm run dev.",
+      "MindMitra Supabase configuration is invalid: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY must be a Supabase publishable key (sb_publishable_...) or standard anon key (eyJ...). Check the environment variables and restart.",
     );
   }
 
