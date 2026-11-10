@@ -1,0 +1,47 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/login"
+  to = "/pages/auth.html"
+  status = 200
+
+[[redirects]]
+  from = "/auth"
+  to = "/pages/auth.html"
+  status = 200
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/pages/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/check-in"
+  to = "/pages/check-in.html"
+  status = 200
+
+[[redirects]]
+  from = "/cbt"
+  to = "/pages/cbt.html"
+  status = 200
+
+[[redirects]]
+  from = "/chat"
+  to = "/pages/chat.html"
+  status = 200
+
+[[redirects]]
+  from = "/mentor"
+  to = "/pages/mentor.html"
+  status = 200
+
+[[redirects]]
+  from = "/crisis"
+  to = "/pages/crisis.html"
+  status = 200
+
+[[redirects]]
+  from = "/settings"
+  to = "/pages/settings.html"
+  status = 200

@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/login", "destination": "/pages/auth.html" },
+    { "source": "/auth", "destination": "/pages/auth.html" },
+    { "source": "/dashboard", "destination": "/pages/dashboard.html" },
+    { "source": "/check-in", "destination": "/pages/check-in.html" },
+    { "source": "/cbt", "destination": "/pages/cbt.html" },
+    { "source": "/chat", "destination": "/pages/chat.html" },
+    { "source": "/mentor", "destination": "/pages/mentor.html" },
+    { "source": "/crisis", "destination": "/pages/crisis.html" },
+    { "source": "/settings", "destination": "/pages/settings.html" }
+  ]
+}
